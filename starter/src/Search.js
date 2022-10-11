@@ -1,21 +1,27 @@
-import { useState} from "react";
+import React, { useState} from "react";
 import { Link } from "react-router-dom";
 import Book from "./Book";
 import * as BooksAPI from "./BooksAPI";
 
-const Search = ({ updateBook }) => {
+const Search = ({ books, updateBook }) => {
 
   const [query, setQuery] = useState("");
   const [searchedBooks, setSearchedBooks] = useState([]);
 
   const updateQuery = (query) => {
     const retrieveSearchResults = async () => {
-      setQuery(query.trim());
+      setQuery(query);
       if (query.length !== 0) {
         console.log("query: " + query)
         const res = await BooksAPI.search(query);
-        console.log(res);
-        setSearchedBooks(res);
+        if (res.error) {
+          setSearchedBooks([]);
+        }
+        else {
+          res.map(a => (books.find(b => a.id === b.id && (a.shelf = b.shelf, true))));
+          console.log(res);
+          setSearchedBooks(res);
+        }
       }
       else {
         setSearchedBooks([]);
@@ -29,6 +35,12 @@ const Search = ({ updateBook }) => {
     updateQuery("");
   };
 
+  const onQueryChange = (event) => {
+    let searchString = event.target.value;
+    updateQuery(searchString);
+  };
+
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -41,18 +53,18 @@ const Search = ({ updateBook }) => {
             type="text"
             placeholder="Search by title, author, or ISBN"
             value={query}
-            onChange={(event) => updateQuery(event.target.value)}
+            onChange={onQueryChange}
           />
         </div>
       </div>
       <div className="search-books-results">
         <ol className="books-grid"></ol>
         <ol className="books-grid">
-          {searchedBooks.map((book) => (
-            <li key={book.title}>
+          {(searchedBooks.length > 0 ) ? searchedBooks.map((book) => (
+            <li key={book.id}>
               <Book book={book} updateBook={updateBook}></Book>
             </li>
-          ))};
+          )): query !== "" ? <div>No books found</div> : ""} 
         </ol>
         <div className="showing-books">
           <button onClick={clearQuery}>Clear</button>

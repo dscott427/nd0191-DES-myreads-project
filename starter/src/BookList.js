@@ -4,12 +4,6 @@ import { Link } from "react-router-dom";
 
 const BookList = ({ books, updateBook }) => {
 
-  const showingShelves = [...new Set(books.map(b => b.shelf))];
-
-  console.log(showingShelves);
-
-  console.log(books);
-
   return (
     <div>
       <div>
@@ -18,14 +12,6 @@ const BookList = ({ books, updateBook }) => {
             <h1>MyReads</h1>
           </div>
           <div className="list-books-content">
-{/*             <div>
-              {showingShelves.map((shelf) =>
-              (
-                <Shelf key={shelf}
-                  name={shelf} books={books.filter((b) => b.shelf === shelf)} updateBook={updateBook}>
-                </Shelf>
-              ))};
-            </div> */}
             <div>
                 <Shelf key="1"
                   name="currentlyReading" shelfName="Currently Reading" books={books.filter((b) => b.shelf === "currentlyReading")} updateBook={updateBook}>

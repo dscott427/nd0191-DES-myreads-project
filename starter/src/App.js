@@ -40,7 +40,7 @@ const App = () => {
       <Route
         path="/search"
         element={
-          <Search updateBook={updateBook} />
+          <Search books={books} updateBook={updateBook} />
         }
       />
     </Routes>
